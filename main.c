@@ -10,6 +10,9 @@
 #include <time.h>
 #include <unistd.h>
 
+void *save();
+
+int count = 0;
 const char default_input[] = "event0";
 
 int main(int argc, char *argv[]) {
@@ -24,30 +27,41 @@ int main(int argc, char *argv[]) {
 
   int input = open(device, O_RDONLY);
   if (input == -1) {
-    printf("Error opening input buffer with error code %d\n", errno);
+    printf("Error opening input buffer with code %d\n", errno);
     return 1;
   }
 
-  FILE *save = fopen("./count.txt", "a");
+  FILE *count_file = fopen("./count.txt", "a");
+  if (count_file == NULL) {
+    printf("Error opening count file with code %d\n", errno);
+    exit(1);
+  }
 
-  fseek(save, 0, SEEK_END);
-  long int size = ftell(save);
+  fseek(count_file, 0, SEEK_END);
+  long int size = ftell(count_file);
   if (size == -1) {
     printf("Error finding size of count file with code %d\n", errno);
     return 1;
   }
 
-  int count = 0;
   if (size != 0) {
-    if (fscanf(save, "%d", &count) == -1) {
+    if (fscanf(count_file, "%d", &count) == -1) {
       printf("Error doing initial read of count file with code %d\n", errno);
       return 1;
     }
   }
 
-  struct input_event event;
+  fclose(count_file);
 
   printf("Starting\n");
+
+  pthread_t thread;
+  if (pthread_create(&thread, NULL, save, NULL) == 1) {
+    printf("Error starting save thread with code %d\n", errno);
+    return 1;
+  }
+
+  struct input_event event;
   while (1) {
     if (read(input, &event, sizeof(event)) == -1) {
       printf("Error reading from input buffer error with code %d\n", errno);
@@ -61,4 +75,24 @@ int main(int argc, char *argv[]) {
   }
 
   return 0;
+}
+
+void *save() {
+  int last = count;
+
+  while (1) {
+    if (count != last) {
+      FILE *count_file = fopen("./count.txt", "w");
+      if (count_file == NULL) {
+        printf("Error opening count file with code %d\n", errno);
+        exit(1);
+      }
+
+      fprintf(count_file, "%d", count);
+      fclose(count_file);
+    }
+
+    last = count;
+    sleep(5);
+  }
 }
