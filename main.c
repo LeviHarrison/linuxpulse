@@ -19,16 +19,24 @@ int main() {
     return 1;
   }
 
-  FILE *save = fopen("./count.txt", "r");
+  FILE *save = fopen("./count.txt", "a");
 
-  int count = 0;
-  if (fscanf(save, "%d", &count) == -1) {
-    printf("Error doing initial read of count file with code %d\n", errno);
+  fseek(save, 0, SEEK_END);
+  long int size = ftell(save);
+  if (size == -1) {
+    printf("Error finding size of count file with code %d\n", errno);
     return 1;
   }
 
+  int count = 0;
+  if (size != 0) {
+    if (fscanf(save, "%d", &count) == -1) {
+      printf("Error doing initial read of count file with code %d\n", errno);
+      return 1;
+    }
+  }
+
   struct input_event event;
-  time_t last = 0;
 
   while (1) {
     if (read(input, &event, sizeof(event)) == -1) {
@@ -37,9 +45,8 @@ int main() {
     }
 
     if (event.type == EV_KEY && event.value == 1) {
-      printf("Key pressed %i %lu\n", count, event.time.tv_sec - last);
-      last = event.time.tv_sec;
       count++;
+      printf("Key pressed %i\n", count);
     }
   }
 
