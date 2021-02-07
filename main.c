@@ -2,8 +2,11 @@
 #include <fcntl.h>
 #include <linux/input-event-codes.h>
 #include <linux/input.h>
+#include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/select.h>
+#include <time.h>
 #include <unistd.h>
 
 int main() {
@@ -16,20 +19,16 @@ int main() {
     return 1;
   }
 
-  int save = open("./count.txt", O_CREAT | O_RDWR);
-  if (save == -1) {
-    printf("Error opening save file with error code %d\n", errno);
-    return 1;
-  }
+  FILE *save = fopen("./count.txt", "r");
 
-  int count;
-  if (read(input, &count, sizeof(int)) == -1) {
+  int count = 0;
+  if (fscanf(save, "%d", &count) == -1) {
     printf("Error doing initial read of count file with code %d\n", errno);
     return 1;
   }
 
   struct input_event event;
-  suseconds_t last = 0;
+  time_t last = 0;
 
   while (1) {
     if (read(input, &event, sizeof(event)) == -1) {
@@ -37,8 +36,9 @@ int main() {
       return 1;
     }
 
-    if (event.type == EV_KEY) {
-      printf("Key pressed %lu\n", last);
+    if (event.type == EV_KEY && event.value == 1) {
+      printf("Key pressed %i %lu\n", count, event.time.tv_sec - last);
+      last = event.time.tv_sec;
       count++;
     }
   }
