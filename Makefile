@@ -1,9 +1,7 @@
-default: run
+default: build run
 
 build:
 	clang main.c -o linuxpulse
 
-start:
+run:
 	sudo ./linuxpulse
-
-run: build start
