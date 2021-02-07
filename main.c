@@ -5,15 +5,24 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/select.h>
 #include <time.h>
 #include <unistd.h>
 
-int main() {
-  printf("Starting\n");
+const char default_input[] = "event0";
 
-  int input =
-      open("/dev/input/by-id/usb-KBDfans_KBD8X-MKII_0-event-kbd", O_RDONLY);
+int main(int argc, char *argv[]) {
+  char device[] = "/dev/input/";
+  if (argc > 1) {
+    strcat(device, argv[1]);
+    printf("Using device %s\n", device);
+  } else {
+    strcat(device, default_input);
+    printf("Using default device %s\n", device);
+  }
+
+  int input = open(device, O_RDONLY);
   if (input == -1) {
     printf("Error opening input buffer with error code %d\n", errno);
     return 1;
@@ -38,6 +47,7 @@ int main() {
 
   struct input_event event;
 
+  printf("Starting\n");
   while (1) {
     if (read(input, &event, sizeof(event)) == -1) {
       printf("Error reading from input buffer error with code %d\n", errno);
