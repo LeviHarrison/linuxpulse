@@ -5,3 +5,6 @@ build:
 
 run:
 	sudo ./linuxpulse
+
+install:
+	sudo cp ./linuxpulse /usr/bin/linuxpulse

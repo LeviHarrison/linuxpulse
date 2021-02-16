@@ -15,7 +15,7 @@ void *save();
 int count = 0;
 const char default_input[] = "event0";
 char device[] = "/dev/input/";
-const char save_path[] = "/tmp/linuxpulse-count.txt";
+const char save_path[] = "/linuxpulse-count.txt";
 
 int main(int argc, char *argv[]) {
   if (argc > 1) {
