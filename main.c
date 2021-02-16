@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  FILE *count_file = fopen("./count.txt", "a");
+  FILE *count_file = fopen("./count.txt", "a+");
   if (count_file == NULL) {
     printf("Error opening count file with code %d\n", errno);
     exit(1);
@@ -45,6 +45,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (size != 0) {
+    rewind(count_file);
     if (fscanf(count_file, "%d", &count) == -1) {
       printf("Error doing initial read of count file with code %d\n", errno);
       return 1;
