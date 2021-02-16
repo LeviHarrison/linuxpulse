@@ -14,9 +14,10 @@ void *save();
 
 int count = 0;
 const char default_input[] = "event0";
+char device[] = "/dev/input/";
+const char save_path[] = "/tmp/linuxpulse-count.txt";
 
 int main(int argc, char *argv[]) {
-  char device[] = "/dev/input/";
   if (argc > 1) {
     strcat(device, argv[1]);
     printf("Using device %s\n", device);
@@ -25,13 +26,15 @@ int main(int argc, char *argv[]) {
     printf("Using default device %s\n", device);
   }
 
+  printf("Savefile path: %s\n", save_path);
+
   int input = open(device, O_RDONLY);
   if (input == -1) {
     printf("Error opening input buffer with code %d\n", errno);
     return 1;
   }
 
-  FILE *count_file = fopen("./count.txt", "a+");
+  FILE *count_file = fopen(save_path, "a+");
   if (count_file == NULL) {
     printf("Error opening count file with code %d\n", errno);
     exit(1);
@@ -82,7 +85,7 @@ void *save() {
 
   while (1) {
     if (count != last) {
-      FILE *count_file = fopen("./count.txt", "w");
+      FILE *count_file = fopen(save_path, "w");
       if (count_file == NULL) {
         printf("Error opening count file with code %d\n", errno);
         exit(1);
