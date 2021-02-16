@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 
   fclose(count_file);
 
-  printf("Starting\n");
+  printf("Starting\nKeys Pressed: %d\n", count);
 
   pthread_t thread;
   if (pthread_create(&thread, NULL, save, NULL) == 1) {
@@ -71,7 +71,6 @@ int main(int argc, char *argv[]) {
 
     if (event.type == EV_KEY && event.value == 1) {
       count++;
-      printf("Key pressed %i\n", count);
     }
   }
 
