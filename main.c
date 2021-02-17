@@ -1,3 +1,4 @@
+#include "metrics.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <linux/input-event-codes.h>
@@ -59,6 +60,9 @@ int main(int argc, char *argv[]) {
 
   printf("Starting\nKeys Pressed: %d\n", count);
 
+  metrics_init();
+  key_count_init(count);
+
   pthread_t thread;
   if (pthread_create(&thread, NULL, save, NULL) == 1) {
     printf("Error starting save thread with code %d\n", errno);
@@ -93,6 +97,8 @@ void *save() {
 
       fprintf(count_file, "%d", count);
       fclose(count_file);
+
+      key_count_add(count - last);
     }
 
     last = count;

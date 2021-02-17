@@ -1,7 +1,7 @@
 default: build run
 
 build:
-	clang main.c -o linuxpulse -lpthread
+	clang main.c metrics.c -o linuxpulse -lpthread -lprom -lpromhttp -lmicrohttpd
 
 run:
 	sudo ./linuxpulse
