@@ -8,6 +8,8 @@
 
 prom_counter_t *key_count;
 
+int port = 9009;
+
 void metrics_init(void) {
   if (prom_collector_registry_default_init() != 0) {
     printf("Error starting Prometheus collector\n");
@@ -15,7 +17,7 @@ void metrics_init(void) {
   }
 
   promhttp_set_active_collector_registry(NULL);
-  if (promhttp_start_daemon(MHD_USE_SELECT_INTERNALLY, 9090, NULL, NULL) ==
+  if (promhttp_start_daemon(MHD_USE_SELECT_INTERNALLY, port, NULL, NULL) ==
       NULL) {
     printf("Error starting metrics daemon\n");
     exit(1);

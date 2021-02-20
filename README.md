@@ -8,7 +8,7 @@ Currently, LinuxPulse only records keypresses, put I plan to add more input meth
 
 Your total (all time) key count is stored in the `/linuxpulse-count.txt` file, and the program reads from that on startup.
 
-Although it would be nice to have a GUI, I haven't got around to implementing one yet, and I don't really plan to. Instead, I've made LinuxPulse a [Prometheus exporter](https://prometheus.io/docs/introduction/overview/#architecture), and the statistics can be accessed at `localhost:9090/metrics`. From there you can direct a [Prometheus instance](https://prometheus.io/docs/introduction/first_steps/) at it, and query in something like [Grafana](https://grafana.com/oss/grafana/).
+Although it would be nice to have a GUI, I haven't got around to implementing one yet, and I don't really plan to. Instead, I've made LinuxPulse a [Prometheus exporter](https://prometheus.io/docs/introduction/overview/#architecture), and the statistics can be accessed at `localhost:9009/metrics` (`:9090` on v1.0). From there you can direct a [Prometheus instance](https://prometheus.io/docs/introduction/first_steps/) at it, and query in something like [Grafana](https://grafana.com/oss/grafana/).
 
 ## Setup
 

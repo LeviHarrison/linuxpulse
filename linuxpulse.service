@@ -3,7 +3,7 @@ Description=Linuxpulse is a Whatpulse alternative for Linux
 
 [Service]
 Type=simple
-ExecStart=sudo /usr/bin/linuxpulse event0
+ExecStart=sudo /usr/bin/linuxpulse event6
 
 [Install]
 WantedBy=multi-user.target
