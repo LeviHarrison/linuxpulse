@@ -1,0 +1,9 @@
+[Unit]
+Description=LinuxPulse is a WhatPulse alternative for Linux
+
+[Service]
+Type=simple
+ExecStart=prometheus --config.file=/home/levi/Desktop/projects/linuxpulse/prometheus.yaml
+
+[Install]
+WantedBy=multi-user.target

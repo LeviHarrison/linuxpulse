@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  linupulse:
+    build: .
+    command: event6
+    volumes:
+      - /linuxpulse-count.txt:/linuxpulse-count.txt
+      - /dev/input/event6:/dev/input/event6:ro
